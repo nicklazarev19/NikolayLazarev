@@ -6,7 +6,7 @@ import Image from "next/image";
 const heroTitle =
   "lg:text-[50px] font-Newsreader italic leading-[100%] text-white whitespace-nowrap";
 
-export const WelcomeSection = () => {
+export const SectionWelcome = () => {
   return (
     <div className="mx-[-40px] overflow-hidden">
       <div className="relative w-full h-[50dvh] lg:h-dvh">

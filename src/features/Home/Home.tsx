@@ -1,11 +1,13 @@
 import { SectionNav } from "./SectionNav";
-import { WelcomeSection } from "./SectionWelcome";
+import { SectionNikolayLazarev } from "./SectionNikolayLazarev";
+import { SectionWelcome } from "./SectionWelcome";
 
 export const Home = () => {
   return (
     <>
-      <WelcomeSection />
+      <SectionWelcome />
       <SectionNav />
+      <SectionNikolayLazarev />
     </>
   );
 };
