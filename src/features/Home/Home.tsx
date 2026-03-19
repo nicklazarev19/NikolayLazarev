@@ -1,6 +1,7 @@
 import { SectionNav } from "./SectionNav";
 import { SectionNikolayLazarev } from "./SectionNikolayLazarev";
 import { SectionWelcome } from "./SectionWelcome";
+import { SectionDivider } from "./SectionDivider";
 
 export const Home = () => {
   return (
@@ -8,6 +9,7 @@ export const Home = () => {
       <SectionWelcome />
       <SectionNav />
       <SectionNikolayLazarev />
+      <SectionDivider />
     </>
   );
 };
