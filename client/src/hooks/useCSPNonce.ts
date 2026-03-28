@@ -1,7 +1,7 @@
 import { cache } from "react";
 import crypto from "crypto";
 
-// generate nonce
+// generate nonce //
 const generateNonce = (): string => {
   if (typeof window !== "undefined") {
     // client side
