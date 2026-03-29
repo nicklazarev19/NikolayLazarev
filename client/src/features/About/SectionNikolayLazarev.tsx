@@ -21,7 +21,7 @@ export const SectionNikolayLazarev = () => {
         whileInView={fadeUp.whileInView}
         viewport={fadeUp.viewport}
         transition={{ ...fadeUp.transition, delay: 0.1 }}
-        className="overflow-hidden"
+        className="overflow-hidden z-30"
       >
         <Image
           src="/images/nikolayLazarev.jpg"
