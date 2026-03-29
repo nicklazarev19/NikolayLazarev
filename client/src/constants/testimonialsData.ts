@@ -9,7 +9,7 @@ export const testimonialsData: TestimonialItem[] = [
     couple: "Hugo & Anastasia",
     quote:
       "We couldn't have asked for a better videographer for our wedding. Nikolay captured every moment so naturally and beautifully. Watching our film feels like reliving the entire day again. His calm presence and attention to detail made everything feel effortless.",
-    image: "/images/testimonialImage1.jpg",
+    image: "/images/testimonialImage1.jpeg",
   },
   {
     couple: "Anastasia & Bohdan",
