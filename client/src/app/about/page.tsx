@@ -7,7 +7,7 @@ const aboutPageDescription =
   "Wedding cinematographer Nikolay Lazarev — refined visual style, artistic storytelling, and an emotional approach to capturing your day. Based in Europe, available for destination weddings worldwide.";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const baseUrl = "https://lazarevwedding.com";
+  const baseUrl = "https://nikolay-lazarev.vercel.app";
   const pageUrl = `${baseUrl}/about`;
 
   return {

@@ -7,7 +7,7 @@ const contactPageDescription =
   "Get in touch with Nikolay Lazarev for your wedding cinematography. Share your wedding plans, date, venue, and vision — available for destination weddings across Europe and beyond.";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const baseUrl = "https://lazarevwedding.com";
+  const baseUrl = "https://nikolay-lazarev.vercel.app";
   const pageUrl = `${baseUrl}/contact-us`;
 
   return {
