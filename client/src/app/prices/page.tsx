@@ -7,7 +7,7 @@ const pricesPageDescription =
   "Wedding videography packages by Nikolay Lazarev — Moment Forever, A Story For Two, and Movie About US. Cinematic films, highlights, drone, speeches; pricing in PLN plus optional add-ons.";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const baseUrl = "https://nikolay-lazarev.vercel.app";
+  const baseUrl = "https://dev-nikolay-lazarev-wedding.vercel.app";
   const pageUrl = `${baseUrl}/prices`;
 
   return {

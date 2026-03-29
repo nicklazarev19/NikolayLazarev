@@ -50,7 +50,7 @@ export const SectionTestimonials = () => {
           {testimonialsData.map((item, idx) => (
             <SwiperSlide key={`${item.couple}-${idx}`}>
               <div className="flex flex-col lg:flex-row">
-                <div className="w-[134px] h-[134px] md:w-[206px] md:h-[206px] overflow-hidden shrink-0 mx-auto lg:mx-0">
+                <div className="w-[134px] h-[134px] md:w-[206px] md:h-[206px] overflow-hidden shrink-0 lg:mx-0">
                   <Image
                     src={item.image}
                     alt={item.couple}

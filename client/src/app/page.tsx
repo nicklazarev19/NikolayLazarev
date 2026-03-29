@@ -3,7 +3,7 @@ import { OrganizationStructuredData } from "@/seo/OrganizationStructuredData";
 import { Metadata } from "next";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const baseUrl = "https://nikolay-lazarev.vercel.app";
+  const baseUrl = "https://dev-nikolay-lazarev-wedding.vercel.app";
 
   return {
     title: "Nikolay Lazarev | Wedding Cinematographer",

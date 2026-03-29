@@ -7,7 +7,7 @@ const portfolioPageDescription =
   "Selected wedding films by Nikolay Lazarev — destination and European celebrations in Bordeaux, Marbella, Warsaw, Paris, and beyond. Cinematic storytelling, refined visuals, emotional highlights.";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const baseUrl = "https://nikolay-lazarev.vercel.app";
+  const baseUrl = "https://dev-nikolay-lazarev-wedding.vercel.app";
   const pageUrl = `${baseUrl}/portfolio`;
 
   return {
