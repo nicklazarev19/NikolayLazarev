@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type MouseEvent } from "react";
+import { useState, useEffect, useCallback, type MouseEvent } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { usePathname, useRouter } from "next/navigation";
 import { InstagramLink } from "./InstagramLink";
@@ -59,11 +59,23 @@ const HeaderDesktop = () => {
 
 const HeaderMobile = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const closeMenu = useCallback(() => setIsOpen(false), []);
 
-  const dynamicColor = isOpen ? "text-white" : "text-black";
-  const dynamicBg = isOpen ? "bg-white" : "bg-black";
+  useEffect(() => {
+    if (!isOpen) return;
+    const html = document.documentElement;
+    const body = document.body;
+    const prevHtmlOverflow = html.style.overflow;
+    const prevBodyOverflow = body.style.overflow;
+    html.style.overflow = "hidden";
+    body.style.overflow = "hidden";
+    return () => {
+      html.style.overflow = prevHtmlOverflow;
+      body.style.overflow = prevBodyOverflow;
+    };
+  }, [isOpen]);
 
-  const burgerLineBase = `block h-[2px] w-full rounded-full ${dynamicBg} transition-transform duration-300 ease-out`;
+  const burgerLineBase = `block h-[2px] w-full rounded-full bg-black transition-transform duration-300 ease-out`;
 
   return (
     <header
@@ -72,7 +84,7 @@ const HeaderMobile = () => {
     >
       <Link
         href="/"
-        className={`relative z-20 text-[20px] font-extralight font-ClashDisplay leading-[23.4px] tracking-[1.63px] ${dynamicColor}`}
+        className={`relative z-60 text-[20px] font-extralight font-ClashDisplay leading-[23.4px] tracking-[1.63px] text-black`}
       >
         NIKOLAY LAZAREV
       </Link>
@@ -80,7 +92,7 @@ const HeaderMobile = () => {
       <button
         type="button"
         aria-label={isOpen ? "Close navigation" : "Open navigation"}
-        className="relative z-20 flex h-[24px] w-[16px] flex-col items-center justify-center gap-[3px]"
+        className="relative z-60 flex h-[24px] w-[16px] flex-col items-center justify-center gap-[3px]"
         onClick={() => setIsOpen(!isOpen)}
       >
         <span
@@ -89,7 +101,7 @@ const HeaderMobile = () => {
           }`}
         />
         <span
-          className={`block h-[2px] w-full rounded-full ${dynamicBg} transition-all duration-300 ease-out ${
+          className={`block h-[2px] w-full rounded-full bg-black transition-all duration-300 ease-out ${
             isOpen ? "opacity-0" : "opacity-100"
           }`}
         />
@@ -101,7 +113,7 @@ const HeaderMobile = () => {
       </button>
       <AnimatePresence initial={false} mode="wait">
         {isOpen && (
-          <MobileNavMenu key="mobile-menu" onClose={() => setIsOpen(false)} />
+          <MobileNavMenu key="mobile-menu" onClose={closeMenu} />
         )}
       </AnimatePresence>
     </header>
@@ -117,23 +129,11 @@ const parentVariants = {
       delayChildren: 0.1,
     },
   },
-  exit: {
-    opacity: 0,
-    transition: {
-      staggerChildren: 0.03,
-      staggerDirection: -1,
-    },
-  },
 };
 
 const itemVariants = {
   hidden: { opacity: 0, y: 10 },
   visible: { opacity: 1, y: 0 },
-  exit: {
-    opacity: 0,
-    y: -14,
-    transition: { duration: 0.18 },
-  },
 };
 
 interface MobileNavMenuProps {
@@ -142,6 +142,14 @@ interface MobileNavMenuProps {
 
 const MobileNavMenu = ({ onClose }: MobileNavMenuProps) => {
   const router = useRouter();
+
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [onClose]);
 
   const handleNavigate = (e: MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
@@ -154,7 +162,10 @@ const MobileNavMenu = ({ onClose }: MobileNavMenuProps) => {
 
   return (
     <motion.div
-      className="absolute top-0 left-0 flex w-full h-dvh bg-[#1E1E1E] z-10"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Navigation menu"
+      className="fixed inset-0 z-50 flex min-h-0 flex-col overflow-y-auto bg-white"
       initial={{ opacity: 0, y: -20 }}
       animate={{
         opacity: 1,
@@ -163,92 +174,66 @@ const MobileNavMenu = ({ onClose }: MobileNavMenuProps) => {
       }}
       exit={{
         opacity: 0,
-        y: -8,
-        transition: { duration: 0.18, delay: 0.18 },
+        y: -20,
+        transition: { ease: "easeIn", duration: 0.25 },
       }}
     >
-      <motion.nav
-        className="flex mt-[116px] w-full items-center flex-col gap-[25px]"
-        variants={parentVariants}
-        initial="hidden"
-        animate="visible"
-        exit="exit"
-      >
-        <motion.div
-          variants={itemVariants}
+      <nav className="flex min-h-dvh w-full flex-col items-center pt-[116px] pb-10">
+        <motion.ul
+          className="m-0 flex w-full list-none flex-col items-center gap-[25px] p-0"
+          variants={parentVariants}
           initial="hidden"
           animate="visible"
-          exit="exit"
-          className="w-full flex justify-center"
         >
-          <NavLink
-            href="/"
-            color="white"
-            onClick={(e) => handleNavigate(e, "/")}
-          >
-            Home
-          </NavLink>
-        </motion.div>
+          <motion.li variants={itemVariants} className="flex w-full justify-center">
+            <NavLink
+              href="/"
+              color="black"
+              onClick={(e) => handleNavigate(e, "/")}
+            >
+              Home
+            </NavLink>
+          </motion.li>
 
-        <motion.div
-          variants={itemVariants}
-          initial="hidden"
-          animate="visible"
-          exit="exit"
-          className="w-full flex justify-center"
-        >
-          <NavLink
-            href="/about"
-            color="white"
-            onClick={(e) => handleNavigate(e, "/about")}
-          >
-            About
-          </NavLink>
-        </motion.div>
+          <motion.li variants={itemVariants} className="flex w-full justify-center">
+            <NavLink
+              href="/about"
+              color="black"
+              onClick={(e) => handleNavigate(e, "/about")}
+            >
+              About
+            </NavLink>
+          </motion.li>
 
-        <motion.div
-          variants={itemVariants}
-          initial="hidden"
-          animate="visible"
-          exit="exit"
-          className="w-full flex justify-center"
-        >
-          <NavLink
-            href="/portfolio"
-            color="white"
-            onClick={(e) => handleNavigate(e, "/portfolio")}
-          >
-            Portfolio
-          </NavLink>
-        </motion.div>
+          <motion.li variants={itemVariants} className="flex w-full justify-center">
+            <NavLink
+              href="/portfolio"
+              color="black"
+              onClick={(e) => handleNavigate(e, "/portfolio")}
+            >
+              Portfolio
+            </NavLink>
+          </motion.li>
 
-        <motion.div
-          variants={itemVariants}
-          initial="hidden"
-          animate="visible"
-          exit="exit"
-          className="w-full flex justify-center"
-        >
-          <NavLink
-            href="/contact-us"
-            color="white"
-            onClick={(e) => handleNavigate(e, "/contact-us")}
-          >
-            Contact
-          </NavLink>
-        </motion.div>
+          <motion.li variants={itemVariants} className="flex w-full justify-center">
+            <NavLink
+              href="/contact-us"
+              color="black"
+              onClick={(e) => handleNavigate(e, "/contact-us")}
+            >
+              Contact
+            </NavLink>
+          </motion.li>
 
-        <motion.div
-          variants={itemVariants}
-          initial="hidden"
-          animate="visible"
-          exit="exit"
-          className="w-full flex justify-center"
-          onClick={onClose}
-        >
-          <InstagramLink />
-        </motion.div>
-      </motion.nav>
+          <motion.li
+            variants={itemVariants}
+            className="flex w-full justify-center"
+            onClick={onClose}
+          >
+            <InstagramLink variant="onLight" />
+          </motion.li>
+        </motion.ul>
+      </nav>
     </motion.div>
   );
 };
