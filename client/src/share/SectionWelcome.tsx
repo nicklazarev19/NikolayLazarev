@@ -20,6 +20,7 @@ interface SectionWelcomeProps {
   poster: string;
   height?: string;
   darken?: boolean;
+  posterPriority?: boolean;
 }
 
 export const SectionWelcome = ({
@@ -29,6 +30,7 @@ export const SectionWelcome = ({
   poster,
   height = "100dvh",
   darken = true,
+  posterPriority = true,
 }: SectionWelcomeProps) => {
   const heroTitle =
     "lg:text-[50px] font-Newsreader italic leading-[100%] text-white whitespace-nowrap";
@@ -42,7 +44,11 @@ export const SectionWelcome = ({
         {darken && (
           <div className="absolute top-0 left-0 w-full h-full bg-black/30 z-10" />
         )}
-        <VideoBg sources={sources ?? []} poster={poster} />
+        <VideoBg
+          sources={sources ?? []}
+          poster={poster}
+          posterPriority={posterPriority}
+        />
         <motion.div
           initial={fadeUp.initial}
           animate={fadeUp.animate}

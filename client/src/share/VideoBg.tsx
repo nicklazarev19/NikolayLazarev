@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { LazyVideo } from "lazyvid";
-import { useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
 interface VideoBgProps {
   sources: {
@@ -8,37 +8,56 @@ interface VideoBgProps {
     type: string;
   }[];
   poster: string;
+  posterPriority?: boolean;
 }
 
-export const VideoBg = ({ sources, poster }: VideoBgProps) => {
-  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
+export const VideoBg = ({
+  sources,
+  poster,
+  posterPriority = true,
+}: VideoBgProps) => {
+  const [revealVideo, setRevealVideo] = useState(false);
+  const revealedRef = useRef(false);
+
+  const handlePlaying = useCallback(() => {
+    if (revealedRef.current) return;
+    revealedRef.current = true;
+    setRevealVideo(true);
+  }, []);
+
+  const hasVideo = sources.length > 0;
 
   return (
-    <div className="relative w-full h-full bg-black">
+    <div className="relative h-full w-full bg-black">
       <Image
         src={poster}
-        alt="Video poster"
+        alt=""
         fill
-        priority
-        className={`absolute top-0 left-0 w-full h-full object-cover object-bottom transition-opacity duration-300 ${
-          isVideoLoaded ? "opacity-0" : "opacity-100"
+        priority={posterPriority}
+        fetchPriority={posterPriority ? "high" : "auto"}
+        sizes="100vw"
+        quality={85}
+        className={`absolute top-0 left-0 h-full w-full object-cover object-bottom transition-opacity duration-500 ease-out ${
+          revealVideo && hasVideo ? "opacity-0" : "opacity-100"
         }`}
-        quality={100}
       />
-      <LazyVideo
-        sources={sources}
-        className={`absolute top-0 left-0 w-full h-full object-cover object-bottom transition-opacity duration-300 ${
-          isVideoLoaded ? "opacity-100" : "opacity-0"
-        }`}
-        autoPlay
-        muted
-        controls={false}
-        loop
-        playsInline
-        preload="auto"
-        pauseOnLeave
-        onLoaded={() => setIsVideoLoaded(true)}
-      />
+      {hasVideo && (
+        <LazyVideo
+          sources={sources}
+          className={`absolute top-0 left-0 h-full w-full object-cover object-bottom transition-opacity duration-500 ease-out ${
+            revealVideo ? "opacity-100" : "opacity-0"
+          }`}
+          autoPlay
+          muted
+          controls={false}
+          loop
+          playsInline
+          preload="auto"
+          pauseOnLeave
+          onPlaying={handlePlaying}
+          onError={() => {}}
+        />
+      )}
     </div>
   );
 };
