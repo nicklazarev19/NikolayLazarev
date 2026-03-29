@@ -1,4 +1,5 @@
 import { Portfolio } from "@/features/Portfolio/Portfolio";
+import { HeroPosterPreload } from "@/seo/HeroPosterPreload";
 import { OrganizationStructuredData } from "@/seo/OrganizationStructuredData";
 import type { Metadata } from "next";
 
@@ -49,6 +50,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default function PortfolioFeature() {
   return (
     <>
+      <HeroPosterPreload href="/images/portfolioMain.jpg" />
       <OrganizationStructuredData />
       <Portfolio />
     </>

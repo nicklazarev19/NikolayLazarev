@@ -21,6 +21,7 @@ interface SectionWelcomeProps {
   height?: string;
   darken?: boolean;
   posterPriority?: boolean;
+  posterUnoptimized?: boolean;
 }
 
 export const SectionWelcome = ({
@@ -31,6 +32,7 @@ export const SectionWelcome = ({
   height = "100dvh",
   darken = true,
   posterPriority = true,
+  posterUnoptimized,
 }: SectionWelcomeProps) => {
   const heroTitle =
     "lg:text-[50px] font-Newsreader italic leading-[100%] text-white whitespace-nowrap";
@@ -48,6 +50,7 @@ export const SectionWelcome = ({
           sources={sources ?? []}
           poster={poster}
           posterPriority={posterPriority}
+          posterUnoptimized={posterUnoptimized}
         />
         <motion.div
           initial={fadeUp.initial}

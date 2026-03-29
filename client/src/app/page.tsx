@@ -1,4 +1,5 @@
 import { Home } from "@/features/Home/Home";
+import { HeroPosterPreload } from "@/seo/HeroPosterPreload";
 import { OrganizationStructuredData } from "@/seo/OrganizationStructuredData";
 import { Metadata } from "next";
 
@@ -46,6 +47,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default function HomeFeature() {
   return (
     <>
+      <HeroPosterPreload href="/images/homePrev.jpg" />
       <OrganizationStructuredData />
       <Home />
     </>

@@ -9,13 +9,17 @@ interface VideoBgProps {
   }[];
   poster: string;
   posterPriority?: boolean;
+  posterUnoptimized?: boolean;
 }
 
 export const VideoBg = ({
   sources,
   poster,
   posterPriority = true,
+  posterUnoptimized,
 }: VideoBgProps) => {
+  const isLocalPublic = poster.startsWith("/");
+  const unoptimized = posterUnoptimized ?? (isLocalPublic ? true : false);
   const [revealVideo, setRevealVideo] = useState(false);
   const revealedRef = useRef(false);
 
@@ -28,7 +32,7 @@ export const VideoBg = ({
   const hasVideo = sources.length > 0;
 
   return (
-    <div className="relative h-full w-full bg-black">
+    <div className="relative h-full w-full bg-[#F5F5F4]">
       <Image
         src={poster}
         alt=""
@@ -37,14 +41,15 @@ export const VideoBg = ({
         fetchPriority={posterPriority ? "high" : "auto"}
         sizes="100vw"
         quality={85}
-        className={`absolute top-0 left-0 h-full w-full object-cover object-bottom transition-opacity duration-500 ease-out ${
+        unoptimized={unoptimized}
+        className={`absolute top-0 left-0 z-20 h-full w-full object-cover object-bottom transition-opacity duration-500 ease-out ${
           revealVideo && hasVideo ? "opacity-0" : "opacity-100"
         }`}
       />
       {hasVideo && (
         <LazyVideo
           sources={sources}
-          className={`absolute top-0 left-0 h-full w-full object-cover object-bottom transition-opacity duration-500 ease-out ${
+          className={`absolute top-0 left-0 z-10 h-full w-full object-cover object-bottom transition-opacity duration-500 ease-out ${
             revealVideo ? "opacity-100" : "opacity-0"
           }`}
           autoPlay
