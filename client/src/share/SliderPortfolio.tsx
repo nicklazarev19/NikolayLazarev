@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import type { SwiperRef } from "swiper/react";
@@ -8,6 +8,8 @@ import "swiper/css";
 import { VideoModal } from "./VideoModal";
 import {
   portfolioData,
+  portfolioItemThumbnail,
+  resolvePortfolioItemThumbnail,
   portfolioItemToVideoSources,
 } from "@/constants/portfolioData";
 
@@ -18,6 +20,7 @@ export const SliderPortfolio = () => {
   const doublePortfolioData = [...portfolioData, ...portfolioData];
   const swiperRef = useRef<SwiperRef>(null);
   interface ModalState {
+    itemId: number;
     title: string;
     poster?: string;
     sources: { label: string; src: string }[];
@@ -43,9 +46,18 @@ export const SliderPortfolio = () => {
     const sources = portfolioItemToVideoSources(item);
     if (sources.length > 0) {
       setModal({
+        itemId: item.id,
         title: item.place,
-        poster: item.thumbnail,
+        poster: portfolioItemThumbnail(item),
         sources,
+      });
+
+      void resolvePortfolioItemThumbnail(item).then((resolvedPoster) => {
+        setModal((prev) =>
+          prev && prev.itemId === item.id
+            ? { ...prev, poster: resolvedPoster }
+            : prev,
+        );
       });
     }
   };
@@ -99,7 +111,7 @@ export const SliderPortfolio = () => {
           >
             <VideoItem
               place={item.place}
-              poster={item.thumbnail}
+              item={item}
               onClick={() => openModal(item)}
             />
           </SwiperSlide>
@@ -120,13 +132,24 @@ export const SliderPortfolio = () => {
 };
 
 interface VideoItemProps {
+  item: (typeof portfolioData)[number];
   place: string;
-  poster: string;
   onClick: () => void;
 }
 
-const VideoItem = ({ place, poster, onClick }: VideoItemProps) => {
+const VideoItem = ({ item, place, onClick }: VideoItemProps) => {
   const [hover, setHover] = useState(false);
+  const [poster, setPoster] = useState(() => portfolioItemThumbnail(item));
+
+  useEffect(() => {
+    let cancelled = false;
+    void resolvePortfolioItemThumbnail(item).then((resolved) => {
+      if (!cancelled) setPoster(resolved);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [item]);
 
   return (
     <button

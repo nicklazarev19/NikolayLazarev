@@ -1,3 +1,8 @@
+import {
+  fetchVimeoThumbnailByVideoUrl,
+  getVimeoThumbnailByVideoUrl,
+} from "@/lib/vimeoThumbnails";
+
 export const PORTFOLIO_DESCRIPTION_BREAK = "[[break]]" as const;
 
 export interface PortfolioData {
@@ -5,7 +10,7 @@ export interface PortfolioData {
   place: string;
   couple: string;
   description: string;
-  thumbnail: string;
+  thumbnail?: string;
   highlights?: string[];
   films?: string[];
 }
@@ -32,6 +37,32 @@ export function portfolioItemToVideoSources(
 
 export function portfolioItemHasVideo(item: PortfolioData): boolean {
   return portfolioItemToVideoSources(item).length > 0;
+}
+
+function portfolioItemPrimaryVideoUrl(item: PortfolioData): string | null {
+  return portfolioItemToVideoSources(item)[0]?.src ?? null;
+}
+
+export function portfolioItemThumbnail(item: PortfolioData): string {
+  const manualThumbnail = item.thumbnail?.trim();
+  if (manualThumbnail) return manualThumbnail;
+
+  const firstVideoUrl = portfolioItemPrimaryVideoUrl(item);
+  const autoThumbnail = firstVideoUrl
+    ? getVimeoThumbnailByVideoUrl(firstVideoUrl)
+    : null;
+
+  return autoThumbnail ?? "/images/portfolioImagePreview1.jpg";
+}
+
+export async function resolvePortfolioItemThumbnail(
+  item: PortfolioData,
+): Promise<string> {
+  const firstVideoUrl = portfolioItemPrimaryVideoUrl(item);
+  if (!firstVideoUrl) return portfolioItemThumbnail(item);
+
+  const resolved = await fetchVimeoThumbnailByVideoUrl(firstVideoUrl);
+  return resolved ?? portfolioItemThumbnail(item);
 }
 
 export const portfolioData: PortfolioData[] = [

@@ -10,6 +10,8 @@ import { VideoModal } from "@/share/VideoModal";
 import {
   PORTFOLIO_DESCRIPTION_BREAK,
   portfolioData,
+  portfolioItemThumbnail,
+  resolvePortfolioItemThumbnail,
   portfolioItemToVideoSources,
 } from "@/constants/portfolioData";
 
@@ -39,7 +41,11 @@ function truncateToWords(text: string, maxWords: number): string {
 }
 
 function descriptionPlainForPreview(text: string): string {
-  return text.split(PORTFOLIO_DESCRIPTION_BREAK).join(" ").replace(/\s+/g, " ").trim();
+  return text
+    .split(PORTFOLIO_DESCRIPTION_BREAK)
+    .join(" ")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 function splitDescriptionBlocks(text: string): string[] {
@@ -67,6 +73,28 @@ export const SectionPortfolio = () => {
     () => (activeItem ? portfolioItemToVideoSources(activeItem) : []),
     [activeItem],
   );
+  const [resolvedActivePostersById, setResolvedActivePostersById] = useState<
+    Record<number, string>
+  >({});
+
+  useEffect(() => {
+    if (!activeItem) return;
+
+    let cancelled = false;
+    void resolvePortfolioItemThumbnail(activeItem).then((resolved) => {
+      if (cancelled) return;
+
+      setResolvedActivePostersById((prev) =>
+        prev[activeItem.id] === resolved
+          ? prev
+          : { ...prev, [activeItem.id]: resolved },
+      );
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [activeItem]);
 
   return (
     <section className="mt-[50px] lg:mt-[100px]">
@@ -91,7 +119,12 @@ export const SectionPortfolio = () => {
         isOpen={activePortfolioId !== null && activeSources.length > 0}
         onClose={() => setActivePortfolioId(null)}
         title={activeItem ? `${activeItem.couple} - ${activeItem.place}` : ""}
-        poster={activeItem?.thumbnail}
+        poster={
+          activeItem
+            ? (resolvedActivePostersById[activeItem.id] ??
+              portfolioItemThumbnail(activeItem))
+            : undefined
+        }
         sources={activeSources}
       />
     </section>
@@ -111,16 +144,29 @@ const PortfolioItem = ({
   onOpenVideo,
 }: PortfolioItemProps) => {
   const [descriptionOpen, setDescriptionOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState(() =>
+    portfolioItemThumbnail(item),
+  );
   const descriptionPlain = descriptionPlainForPreview(item.description);
   const wordCount = countWords(descriptionPlain);
-  const needsDescriptionModal =
-    wordCount > DESCRIPTION_PREVIEW_WORDS;
+  const needsDescriptionModal = wordCount > DESCRIPTION_PREVIEW_WORDS;
   const descriptionPreview = truncateToWords(
     descriptionPlain,
     DESCRIPTION_PREVIEW_WORDS,
   );
 
   const closeDescription = useCallback(() => setDescriptionOpen(false), []);
+
+  useEffect(() => {
+    let cancelled = false;
+    void resolvePortfolioItemThumbnail(item).then((resolved) => {
+      if (!cancelled) setPreviewImage(resolved);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [item]);
 
   useEffect(() => {
     if (!descriptionOpen) return;
@@ -160,10 +206,7 @@ const PortfolioItem = ({
   );
 
   const previewBlock = (
-    <VideoPreview
-      previewImage={item.thumbnail ?? "/images/portfolioImagePreview1.jpg"}
-      onOpenVideo={onOpenVideo}
-    />
+    <VideoPreview previewImage={previewImage} onOpenVideo={onOpenVideo} />
   );
 
   return (
