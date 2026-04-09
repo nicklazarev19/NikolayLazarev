@@ -52,34 +52,48 @@ export const Footer = () => {
         className="mt-[60px] mx-auto w-fit grid grid-cols-1 sm:grid-cols-2 sm:gap-x-[15px] justify-items-center
       lg:w-auto gap-[15px] lg:flex lg:flex-row lg:items-center lg:justify-center"
       >
-        <Image
-          src="/images/footerImage1.jpg"
-          alt="footer-1"
-          width={206}
-          height={206}
-          quality={100}
-        />
-        <Image
-          src="/images/footerImage2.jpg"
-          alt="footer-2"
-          width={206}
-          height={206}
-          quality={100}
-        />
-        <Image
-          src="/images/footerImage3.jpg"
-          alt="footer-3"
-          width={206}
-          height={206}
-          quality={100}
-        />
-        <Image
-          src="/images/footerImage4.jpg"
-          alt="footer-4"
-          width={206}
-          height={206}
-          quality={100}
-        />
+        <div className="w-[206px] h-[206px] overflow-hidden relative">
+          <Image
+            src="/images/footerImage1.jpg"
+            alt="footer-1"
+            fill
+            sizes="206px"
+            quality={100}
+            className="object-cover"
+          />
+        </div>
+
+        <div className="w-[206px] h-[206px] overflow-hidden relative">
+          <Image
+            src="/images/footerImage2.jpg"
+            alt="footer-2"
+            fill
+            sizes="206px"
+            quality={100}
+            className="object-cover"
+          />
+        </div>
+
+        <div className="w-[206px] h-[206px] overflow-hidden relative">
+          <Image
+            src="/images/footerImage3.jpg"
+            alt="footer-3"
+            fill
+            sizes="206px"
+            quality={100}
+            className="object-cover"
+          />
+        </div>
+        <div className="w-[206px] h-[206px] overflow-hidden relative">
+          <Image
+            src="/images/footerImage4.jpg"
+            alt="footer-4"
+            fill
+            sizes="206px"
+            quality={100}
+            className="object-cover"
+          />
+        </div>
       </div>
 
       <p
