@@ -29,7 +29,7 @@ export const SectionWelcome = ({
   description,
   sources,
   poster,
-  height = "100dvh",
+  height = "100svh",
   darken = true,
   posterPriority = true,
   posterUnoptimized,
@@ -40,7 +40,7 @@ export const SectionWelcome = ({
   return (
     <section className="mx-[-40px] overflow-hidden">
       <div
-        className="relative w-full h-[50dvh] lg:h-(--section-welcome-lg-h)"
+        className="relative w-full h-[50svh] lg:h-(--section-welcome-lg-h)"
         style={{ "--section-welcome-lg-h": height } as React.CSSProperties}
       >
         {darken && (
