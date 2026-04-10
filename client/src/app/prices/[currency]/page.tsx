@@ -34,11 +34,15 @@ export function generateStaticParams() {
 }
 
 const getCurrencyBySlug = (slug: string): PriceCurrency | null => {
-  const matchedEntry = (Object.entries(currencyConfig) as [PriceCurrency, (typeof currencyConfig)[PriceCurrency]][])
-    .find(([, config]) => config.slug === slug);
+  const matchedEntry = (
+    Object.entries(currencyConfig) as [
+      PriceCurrency,
+      (typeof currencyConfig)[PriceCurrency],
+    ][]
+  ).find(([, config]) => config.slug === slug);
 
   return matchedEntry ? matchedEntry[0] : null;
-}
+};
 
 export async function generateMetadata({
   params,
@@ -53,7 +57,7 @@ export async function generateMetadata({
 
   const currentConfig = currencyConfig[currentCurrency];
   const pageUrl = `${baseUrl}/prices/${currentConfig.slug}`;
-  const pricesPageTitle = `Prices (${currentConfig.titleCurrency}) | Nikolay Lazarev`;
+  const pricesPageTitle = `Prices | Nikolay Lazarev`;
   const pricesPageDescription =
     "Wedding videography packages by Nikolay Lazarev — Moment Forever, A Story For Two, and Movie About US. Cinematic films, highlights, drone, speeches; pricing and optional add-ons.";
 
