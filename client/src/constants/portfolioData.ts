@@ -22,14 +22,17 @@ export function portfolioItemToVideoSources(
 ): PortfolioVideoSource[] {
   const out: PortfolioVideoSource[] = [];
 
-  (item.highlights ?? []).forEach((raw, i) => {
-    const src = raw?.trim();
-    if (src) out.push({ label: `Highlight ${i + 1}`, src });
+  const highlights = (item.highlights ?? []).map((raw) => raw?.trim()).filter(Boolean) as string[];
+  const films = (item.films ?? []).map((raw) => raw?.trim()).filter(Boolean) as string[];
+
+  highlights.forEach((src, i) => {
+    const label = highlights.length === 1 ? "Highlight" : `Highlight ${i + 1}`;
+    out.push({ label, src });
   });
 
-  (item.films ?? []).forEach((raw, i) => {
-    const src = raw?.trim();
-    if (src) out.push({ label: `Film ${i + 1}`, src });
+  films.forEach((src, i) => {
+    const label = films.length === 1 ? "Film" : `Film ${i + 1}`;
+    out.push({ label, src });
   });
 
   return out;
@@ -75,6 +78,7 @@ export const portfolioData: PortfolioData[] = [
     thumbnail:
       "https://i.vimeocdn.com/video/2137828740-0e61944668217fcd7bd028b830d4ae5104729b4aa25dec5b2b223eb1dc939155-d_960?region=us",
     highlights: ["https://player.vimeo.com/video/1176687780"],
+    films: ["https://player.vimeo.com/video/1181751544"],
   },
   {
     id: 2,
