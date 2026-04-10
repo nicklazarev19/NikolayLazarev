@@ -61,7 +61,7 @@ const VideoDivider = ({
     <>
       <LazyVideo
         sources={sources}
-        className="w-full h-full object-cover"
+        className="w-full h-full object-cover scale-102"
         autoPlay
         muted
         controls={false}
