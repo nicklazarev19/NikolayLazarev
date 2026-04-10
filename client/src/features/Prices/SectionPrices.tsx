@@ -1,17 +1,24 @@
-import { pricesData, type PricePlan } from "@/constants/pricesData";
+import { type PricePlan, type PricesData } from "@/constants/pricesData";
 
-export const SectionPrices = () => {
+export const SectionPrices = ({ pricesData }: { pricesData: PricesData }) => {
+  const hasPlans = pricesData.plans.length > 0;
+  const hasAdditional = pricesData.additional.length > 0;
+
   return (
     <section className="mt-[50px]">
-      <div className="flex flex-col lg:flex-row items-center justify-center gap-[25px]">
-        {pricesData.plans.map((plan) => (
-          <PriceCard key={plan.title} plan={plan} />
-        ))}
-      </div>
+      {hasPlans && (
+        <div className="flex flex-col lg:flex-row items-center justify-center gap-[25px]">
+          {pricesData.plans.map((plan) => (
+            <PriceCard key={plan.title} plan={plan} />
+          ))}
+        </div>
+      )}
 
-      <div className="mt-[24px]">
-        <AditionalCard />
-      </div>
+      {hasAdditional && (
+        <div className="mt-[24px] mb-[50px]">
+          <AditionalCard pricesData={pricesData} />
+        </div>
+      )}
     </section>
   );
 };
@@ -36,7 +43,7 @@ const PriceCard = ({ plan }: { plan: PricePlan }) => {
   );
 };
 
-const AditionalCard = () => {
+const AditionalCard = ({ pricesData }: { pricesData: PricesData }) => {
   return (
     <div className="w-full items-center justify-center bg-[#F5F5F4] py-[25px] px-[20px]">
       <h3 className={titleStyles}>{pricesData.additionalSectionTitle}</h3>
