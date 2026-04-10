@@ -256,7 +256,7 @@ const Form = () => {
 };
 
 const inputBaseClassName =
-  "w-full min-h-[40px] bg-white border p-[15px] text-[14px] font-normal font-Poppins leading-[130%] tracking-[0.38px] text-black placeholder:text-[#717680] focus:outline-none";
+  "w-full min-h-[40px] bg-white border p-[15px] text-[16px] font-normal font-Poppins leading-[130%] tracking-[0.38px] text-black placeholder:text-[#717680] focus:outline-none";
 const inputNormalClassName = "border-black/50 focus:border-black";
 const inputErrorClassName = "border-red-500 focus:border-red-600";
 
